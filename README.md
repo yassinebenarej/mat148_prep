@@ -5,8 +5,12 @@ A single static page for tracking revision before MAT148H1 Test 1
 
 The Test 1 announcement turned into one set of checkboxes: the nine prep
 steps, the Unit 1 and Unit 2 coverage, and the definitions, theorems and
-proofs that have to be written from memory. Ticks are kept in
-localStorage, so closing the tab doesn't lose them.
+proofs that have to be written from memory. Ticks and which groups are
+open are kept in localStorage, so closing the tab doesn't lose them.
+
+Set in OpenDyslexic, bundled in `fonts/` so the page has no network
+dependency. Licensed under the SIL Open Font License — see
+`fonts/OFL.txt`.
 
 No build step and no dependencies — `index.html` is the whole thing.
 
