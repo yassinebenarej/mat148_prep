@@ -22,6 +22,7 @@
     --line: rgba(255, 255, 255, 0.06);
     --wa08: rgba(255, 255, 255, 0.08);
     --wa035: rgba(255, 255, 255, 0.035);
+    --wa04: rgba(255, 255, 255, 0.04);
     --ink: #ececed;
     --ink-dim: #9a9aa3;
     --ink-mute: #5e5e68;
@@ -233,93 +234,93 @@
 .navlink:hover { color: var(--ink); }
 .navlink .arrow { color: var(--ink-mute); margin-left: 4px; }
 
-/* ---- astuces ---- */
-.composer {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.composer:focus-within { border-color: rgba(255, 255, 255, 0.16); }
+/* ---- astuces: the subtask row from the task detail page ---- */
+.astuces-list { display: flex; flex-direction: column; }
 
-.field {
-  width: 100%;
+.astuce-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.astuce-item:hover .astuce-delete { opacity: 1; }
+
+.astuce-check {
+  position: relative;
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--ink-mute);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  transition: all 0.15s ease;
+}
+.astuce-check:hover { border-color: var(--ink); }
+.astuce-check svg { width: 10px; height: 10px; opacity: 0; transition: opacity 0.15s ease; }
+.astuce-check.checked { background: var(--done); border-color: var(--done); }
+.astuce-check.checked svg { opacity: 1; }
+.astuce-check svg path {
+  fill: none; stroke: #0d2510; stroke-width: 2.4;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.astuce-check:focus-visible { outline: 2px solid var(--ink-dim); outline-offset: 2px; }
+
+.astuce-text {
+  flex: 1;
+  min-width: 0;
   background: transparent;
   border: 0;
   color: var(--ink);
   font-family: inherit;
   font-size: 14px;
   letter-spacing: inherit;
-  line-height: 1.75;
-  resize: vertical;
-  padding: 0;
+  padding: 6px 8px;
+  margin: -6px -8px;
+  border-radius: 6px;
 }
-.field::placeholder { color: var(--ink-mute); }
-.field:focus { outline: none; }
-.field.title { font-weight: 700; }
-.field.body { min-height: 62px; font-size: 13px; }
+.astuce-text:focus { outline: 0; background: var(--wa04); }
+.astuce-text::placeholder { color: var(--ink-mute); }
+.astuce-item.done .astuce-text { color: var(--ink-mute); text-decoration: line-through; }
 
-.composer-foot { display: flex; align-items: center; gap: 14px; }
-.hintline { font-size: 11.5px; color: var(--ink-mute); margin-right: auto; }
-.btn {
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  padding: 6px 14px;
-  color: var(--ink-dim);
-  font-family: inherit;
-  font-size: 12px;
-  letter-spacing: inherit;
-  cursor: pointer;
-  transition: color 0.14s ease, border-color 0.14s ease;
-}
-.btn:hover:not(:disabled) { color: var(--ink); border-color: rgba(255, 255, 255, 0.18); }
-.btn:disabled { opacity: 0.4; cursor: default; }
-
-/* Each saved trick is a row in the same idiom as a task — hairline
-   separated, no card chrome — but its text is editable in place. */
-.astuce {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  align-items: start;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
-}
-.astuce-main { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-/* These grow to fit their text, so a drag handle would only let you make
-   them the wrong size. */
-.astuce .field.body { resize: none; overflow: hidden; }
-.astuce .meta {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-mute);
-  letter-spacing: 0;
-  margin-top: 4px;
-}
-.astuce .x {
+.astuce-delete {
   background: transparent;
   border: 0;
   color: var(--ink-mute);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1;
-  padding: 4px 6px;
+  padding: 3px 5px;
   cursor: pointer;
   border-radius: 5px;
   opacity: 0;
+  flex-shrink: 0;
   transition: opacity 0.12s ease, color 0.12s ease;
 }
-.astuce:hover .x, .astuce .x:focus-visible { opacity: 1; }
-.astuce .x:hover { color: var(--t-prf); }
+.astuce-delete:hover { color: var(--t-prf); }
+.astuce-delete:focus-visible { opacity: 1; outline: 2px solid var(--ink-dim); outline-offset: 1px; }
+
+.addrow {
+  background: transparent;
+  border: 0;
+  padding: 12px 0 0;
+  color: var(--ink-mute);
+  font-family: inherit;
+  font-size: 12.5px;
+  letter-spacing: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.14s ease;
+}
+.addrow:hover { color: var(--ink); }
+.addrow .plus { margin-right: 7px; }
 
 .empty {
-  padding: 40px 0;
+  padding: 34px 0;
   color: var(--ink-mute);
   font-size: 13px;
-  text-align: center;
   border-bottom: 1px solid var(--line);
 }

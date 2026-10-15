@@ -19,8 +19,8 @@
     <span class="when" id="count"></span>
   </div>
   <p class="lede">
-    The tricks that only show up once you're doing the problems. Write one down
-    the moment it costs you time, not later.
+    The tricks that only show up once you're doing the problems. One line each —
+    enter starts the next one. Tick the ones you have down.
   </p>
 
   <div class="toolbar">
@@ -29,19 +29,11 @@
     <button class="reset" id="copy" type="button">Copy all</button>
   </div>
 
-  <div class="composer">
-    <input class="field title" id="t" type="text" placeholder="The trick — e.g. multiply by the conjugate" />
-    <textarea class="field body" id="b" placeholder="When it applies, and why it works (optional)"></textarea>
-    <div class="composer-foot">
-      <span class="hintline" id="hint">⌘↵ to add</span>
-      <button class="btn" id="add" type="button" disabled>Add</button>
-    </div>
-  </div>
-
-  <div id="list"></div>
+  <div class="astuces-list" id="list"></div>
+  <button class="addrow" id="add" type="button"><span class="plus">＋</span>astuce</button>
 
   <footer>
-    <span>Newest first. Click any trick to edit it.</span>
+    <span>Enter adds the next · backspace on an empty line removes it</span>
     <span>Stored in this browser only — use Copy all to keep a copy elsewhere.</span>
   </footer>
 </div>
@@ -49,129 +41,136 @@
 <script>
 (function () {
   var KEY = 'mat148-astuces';
-
   var list = document.getElementById('list');
-  var tEl = document.getElementById('t');
-  var bEl = document.getElementById('b');
-  var addEl = document.getElementById('add');
   var countEl = document.getElementById('count');
 
   var items = [];
   try { items = JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { items = []; }
   if (!Array.isArray(items)) items = [];
 
+  // An earlier version stored {title, body}. Fold those into one line so
+  // nothing written before this page changed shape is lost.
+  items = items.map(function (it) {
+    if (typeof it.text === 'string') return it;
+    var t = (it.title || '').trim();
+    var b = (it.body || '').trim();
+    return { id: it.id, text: b ? t + ' — ' + b : t, done: !!it.done };
+  });
+
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {}
   }
+  function uid() {
+    return 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  }
+  function inputs() {
+    return Array.prototype.slice.call(list.querySelectorAll('.astuce-text'));
+  }
+  function focusAt(i, toEnd) {
+    var all = inputs();
+    var el = all[Math.max(0, Math.min(i, all.length - 1))];
+    if (!el) return;
+    el.focus();
+    if (toEnd) { var v = el.value || ''; el.setSelectionRange(v.length, v.length); }
+  }
 
-  function when(ts) {
-    var d = new Date(ts);
-    if (isNaN(d)) return '';
-    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  function addAt(i) {
+    items.splice(i, 0, { id: uid(), text: '', done: false });
+    save();
+    render();
+    focusAt(i);
+  }
+  function remove(id) {
+    items = items.filter(function (o) { return o.id !== id; });
+    save();
   }
 
   function render() {
-    countEl.textContent = items.length + (items.length === 1 ? ' trick' : ' tricks');
+    var written = items.filter(function (it) { return it.text.trim(); }).length;
+    countEl.textContent = written ? written + (written === 1 ? ' trick' : ' tricks') : '';
 
+    list.innerHTML = '';
     if (items.length === 0) {
-      list.innerHTML = '<div class="empty">Nothing yet. The first one usually turns up in a limit.</div>';
+      var e = document.createElement('div');
+      e.className = 'empty';
+      e.textContent = 'Nothing yet. The first one usually turns up in a limit.';
+      list.appendChild(e);
       return;
     }
 
-    list.innerHTML = '';
-    items.forEach(function (it) {
+    items.forEach(function (it, idx) {
       var row = document.createElement('div');
-      row.className = 'astuce';
+      row.className = 'astuce-item' + (it.done ? ' done' : '');
 
-      var main = document.createElement('div');
-      main.className = 'astuce-main';
-
-      // Editable in place: the text is the field, so there is no edit mode
-      // to enter or leave and nothing to save explicitly.
-      var title = document.createElement('input');
-      title.className = 'field title';
-      title.type = 'text';
-      title.value = it.title || '';
-      title.setAttribute('aria-label', 'Trick');
-      title.addEventListener('input', function () { it.title = title.value; save(); });
-
-      var body = document.createElement('textarea');
-      body.className = 'field body';
-      body.value = it.body || '';
-      body.setAttribute('aria-label', 'Detail');
-      body.style.minHeight = '0';
-      body.rows = 1;
-      body.setAttribute('placeholder', 'Add detail…');
-      var grow = function () {
-        body.style.height = 'auto';
-        body.style.height = body.scrollHeight + 'px';
-      };
-      body.addEventListener('input', function () { it.body = body.value; save(); grow(); });
-
-      var meta = document.createElement('div');
-      meta.className = 'meta';
-      meta.textContent = when(it.created);
-
-      main.appendChild(title);
-      main.appendChild(body);
-      main.appendChild(meta);
-
-      var x = document.createElement('button');
-      x.className = 'x';
-      x.type = 'button';
-      x.textContent = '×';
-      x.setAttribute('aria-label', 'Delete this trick');
-      x.addEventListener('click', function () {
-        items = items.filter(function (o) { return o.id !== it.id; });
+      var check = document.createElement('div');
+      check.className = 'astuce-check' + (it.done ? ' checked' : '');
+      check.setAttribute('role', 'checkbox');
+      check.setAttribute('aria-checked', String(!!it.done));
+      check.setAttribute('aria-label', 'Got this one');
+      check.tabIndex = 0;
+      check.innerHTML = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 L6.5 12 L13 4.5" /></svg>';
+      var toggle = function () {
+        it.done = !it.done;
         save();
-        render();
+        check.classList.toggle('checked', it.done);
+        check.setAttribute('aria-checked', String(it.done));
+        row.classList.toggle('done', it.done);
+      };
+      check.addEventListener('click', toggle);
+      check.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
       });
 
-      row.appendChild(main);
-      row.appendChild(x);
+      var input = document.createElement('input');
+      input.className = 'astuce-text';
+      input.type = 'text';
+      input.value = it.text;
+      input.placeholder = 'Astuce…';
+      input.addEventListener('input', function () {
+        it.text = input.value;
+        save();
+        var written = items.filter(function (o) { return o.text.trim(); }).length;
+        countEl.textContent = written ? written + (written === 1 ? ' trick' : ' tricks') : '';
+      });
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addAt(idx + 1);
+        } else if (e.key === 'Backspace' && input.value === '') {
+          // Deleting the line you're on moves you to the end of the one
+          // above, so a run of empties clears with repeated backspaces.
+          e.preventDefault();
+          remove(it.id);
+          render();
+          focusAt(idx - 1, true);
+        }
+      });
+
+      var del = document.createElement('button');
+      del.className = 'astuce-delete';
+      del.type = 'button';
+      del.textContent = '×';
+      del.setAttribute('aria-label', 'Delete this astuce');
+      del.addEventListener('click', function () { remove(it.id); render(); });
+
+      row.appendChild(check);
+      row.appendChild(input);
+      row.appendChild(del);
       list.appendChild(row);
-
-      grow();
     });
   }
 
-  function canAdd() { return tEl.value.trim().length > 0; }
-  function sync() { addEl.disabled = !canAdd(); }
-
-  function add() {
-    if (!canAdd()) return;
-    items.unshift({
-      id: 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      title: tEl.value.trim(),
-      body: bEl.value.trim(),
-      created: Date.now()
-    });
-    save();
-    tEl.value = '';
-    bEl.value = '';
-    sync();
-    render();
-    tEl.focus();
-  }
-
-  tEl.addEventListener('input', sync);
-  addEl.addEventListener('click', add);
-
-  [tEl, bEl].forEach(function (el) {
-    el.addEventListener('keydown', function (e) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); add(); }
-      // Enter commits from the title field; the body is multi-line, so there
-      // it has to stay a newline.
-      if (el === tEl && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); add(); }
-    });
+  document.getElementById('add').addEventListener('click', function () {
+    addAt(items.length);
   });
 
   document.getElementById('copy').addEventListener('click', function (e) {
     var btn = e.currentTarget;
-    if (items.length === 0) return;
-    var text = items.map(function (it) {
-      return '— ' + (it.title || '') + (it.body ? '\n  ' + it.body.replace(/\n/g, '\n  ') : '');
-    }).join('\n\n');
+    var written = items.filter(function (it) { return it.text.trim(); });
+    if (written.length === 0) return;
+    var text = written.map(function (it) {
+      return (it.done ? '[x] ' : '[ ] ') + it.text.trim();
+    }).join('\n');
     var done = function () {
       var was = btn.textContent;
       btn.textContent = 'Copied';
@@ -189,7 +188,6 @@
     }
   });
 
-  sync();
   render();
 })();
 </script>

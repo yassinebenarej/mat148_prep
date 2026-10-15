@@ -13,8 +13,10 @@ dependency. Licensed under the SIL Open Font License — see
 `fonts/OFL.txt`.
 
 `astuces.html` is a second page for the tricks that only turn up once
-you're working problems — write one down, edit it in place, copy them all
-out when you want them somewhere safer than a browser.
+you're working problems. One line each, the way subtasks work in Aced:
+enter starts the next, backspace on an empty line removes it, and the
+tick marks the ones you have down. Copy all puts them on the clipboard
+when you want them somewhere safer than a browser.
 
 No build step and no dependencies — two HTML files, one stylesheet, a
 font and an icon.
