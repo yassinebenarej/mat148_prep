@@ -1,6 +1,7 @@
-/* One list of single-line notes, the way subtasks work on an Aced task:
- * enter starts the next line, backspace on an empty one removes it, and
- * the tick marks the ones you are done with.
+/* One list of notes, the way subtasks work on an Aced task: enter starts
+ * the next one, shift+enter breaks the line inside this one, backspace on
+ * an empty one removes it, and the tick marks the ones you are done
+ * with.
  *
  * Astuces and weaknesses are the same widget pointed at different storage
  * and wearing different words, so the behaviour lives here once.
@@ -105,8 +106,8 @@ function noteList(opts) {
 
       /* A textarea, not an input: an input scrolls sideways when the text
        * outruns it, so the end of a long trick becomes invisible. This
-       * wraps and grows instead, and still behaves like one line —
-       * enter starts the next entry rather than breaking this one. */
+       * wraps, takes a deliberate line break on shift+enter, and grows
+       * to whatever it holds. */
       var input = document.createElement('textarea');
       input.className = 'astuce-text';
       input.rows = 1;
@@ -121,18 +122,15 @@ function noteList(opts) {
         input.scrollTop = 0;
       };
       input.addEventListener('input', function () {
-        /* Pasted newlines would otherwise turn one trick into a block of
-         * text that no longer matches what Copy all writes out. */
-        if (input.value.indexOf('\n') !== -1) {
-          input.value = input.value.replace(/\s*\n+\s*/g, ' ');
-        }
         it.text = input.value;
         save();
         setCount();
         grow();
       });
       input.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Enter') {
+        /* Shift+enter is left alone — the textarea inserts the newline
+         * itself, and the input handler that follows grows the row. */
+        if (ev.key === 'Enter' && !ev.shiftKey) {
           ev.preventDefault();
           addAt(idx + 1);
         } else if (ev.key === 'Backspace' && input.value === '') {
@@ -169,7 +167,9 @@ function noteList(opts) {
     var rows = written();
     if (rows.length === 0) return;
     var text = rows.map(function (it) {
-      return (it.done ? '[x] ' : '[ ] ') + it.text.trim();
+      /* Line up continuation lines under the first, so a multi-line trick
+       * still reads as one item in whatever it gets pasted into. */
+      return (it.done ? '[x] ' : '[ ] ') + it.text.trim().replace(/\n/g, '\n    ');
     }).join('\n');
     var flash = function () {
       var was = btn.textContent;
