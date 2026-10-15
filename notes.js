@@ -58,6 +58,16 @@ function noteList(opts) {
     save();
   }
 
+  /* Every textarea on the page, so their heights can be recomputed when
+   * something that changes wrapping happens after render. */
+  function growAll() {
+    Array.prototype.forEach.call(list.querySelectorAll('.astuce-text'), function (el) {
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+      el.scrollTop = 0;
+    });
+  }
+
   function render() {
     setCount();
     list.innerHTML = '';
@@ -105,6 +115,10 @@ function noteList(opts) {
       var grow = function () {
         input.style.height = 'auto';
         input.style.height = input.scrollHeight + 'px';
+        /* A textarea keeps its scroll position, so after growing it can
+         * still be scrolled past its own first line — which, with
+         * overflow hidden, simply hides it. */
+        input.scrollTop = 0;
       };
       input.addEventListener('input', function () {
         /* Pasted newlines would otherwise turn one trick into a block of
@@ -175,4 +189,18 @@ function noteList(opts) {
   });
 
   render();
+
+  /* The face loads with font-display: swap, so the first measurement runs
+   * against fallback metrics and comes out short — the entry ends up
+   * shorter than its text and clips the top line. Measure again once the
+   * real font is in, and again whenever the column width changes, since
+   * that changes where the text wraps. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(growAll);
+  }
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(growAll, 120);
+  });
 }
