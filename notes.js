@@ -93,15 +93,29 @@ function noteList(opts) {
         if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(); }
       });
 
-      var input = document.createElement('input');
+      /* A textarea, not an input: an input scrolls sideways when the text
+       * outruns it, so the end of a long trick becomes invisible. This
+       * wraps and grows instead, and still behaves like one line —
+       * enter starts the next entry rather than breaking this one. */
+      var input = document.createElement('textarea');
       input.className = 'astuce-text';
-      input.type = 'text';
+      input.rows = 1;
       input.value = it.text;
       input.placeholder = opts.placeholder;
+      var grow = function () {
+        input.style.height = 'auto';
+        input.style.height = input.scrollHeight + 'px';
+      };
       input.addEventListener('input', function () {
+        /* Pasted newlines would otherwise turn one trick into a block of
+         * text that no longer matches what Copy all writes out. */
+        if (input.value.indexOf('\n') !== -1) {
+          input.value = input.value.replace(/\s*\n+\s*/g, ' ');
+        }
         it.text = input.value;
         save();
         setCount();
+        grow();
       });
       input.addEventListener('keydown', function (ev) {
         if (ev.key === 'Enter') {
@@ -128,6 +142,7 @@ function noteList(opts) {
       row.appendChild(input);
       row.appendChild(del);
       list.appendChild(row);
+      grow();
     });
   }
 

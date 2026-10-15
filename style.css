@@ -225,9 +225,11 @@
 /* ---- astuces: the subtask row from the task detail page ---- */
 .astuces-list { display: flex; flex-direction: column; }
 
+/* Top-aligned, so a trick that wraps keeps its tick and its × beside the
+   first line rather than drifting to the middle of the block. */
 .astuce-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 6px 0;
   border-bottom: 1px solid var(--line);
@@ -236,6 +238,7 @@
 
 .astuce-check {
   position: relative;
+  margin-top: 10px;
   width: 16px; height: 16px;
   border-radius: 4px;
   border: 1.5px solid var(--ink-mute);
@@ -260,6 +263,10 @@
 .astuce-text {
   flex: 1;
   min-width: 0;
+  resize: none;
+  overflow: hidden;
+  line-height: 1.75;
+  display: block;
   background: transparent;
   border: 0;
   color: var(--ink);
@@ -275,6 +282,7 @@
 .astuce-item.done .astuce-text { color: var(--ink-mute); text-decoration: line-through; }
 
 .astuce-delete {
+  margin-top: 7px;
   background: transparent;
   border: 0;
   color: var(--ink-mute);
