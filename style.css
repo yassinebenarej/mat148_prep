@@ -20,12 +20,13 @@
   :root {
     --bg: #000000;
     --line: rgba(255, 255, 255, 0.06);
+    --line-strong: rgba(255, 255, 255, 0.14);
     --wa08: rgba(255, 255, 255, 0.08);
     --wa035: rgba(255, 255, 255, 0.035);
     --wa04: rgba(255, 255, 255, 0.04);
     --ink: #ececed;
-    --ink-dim: #9a9aa3;
-    --ink-mute: #5e5e68;
+    --ink-dim: #b3b3bc;
+    --ink-mute: #85858f;
     --done: #7cc46b;
 
     --t-prep: #8a6a4a;
@@ -303,20 +304,42 @@
 .astuce-delete:hover { color: var(--t-prf); }
 .astuce-delete:focus-visible { opacity: 1; outline: 2px solid var(--ink-dim); outline-offset: 1px; }
 
+/* The add control from the task detail page: an icon-sized pill that
+   opens to show its label on hover. */
 .addrow {
+  flex-shrink: 0;
   background: transparent;
-  border: 0;
-  padding: 12px 0 0;
-  color: var(--ink-mute);
-  font-family: inherit;
-  font-size: 12.5px;
-  letter-spacing: inherit;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  padding: 0 8px;
+  height: 32px;
+  margin-top: 14px;
   cursor: pointer;
-  text-align: left;
-  transition: color 0.14s ease;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: inherit;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  transition: color 0.18s ease, border-color 0.18s ease, padding 0.22s ease, gap 0.22s ease;
 }
-.addrow:hover { color: var(--ink); }
-.addrow .plus { margin-right: 7px; }
+.addrow .ic { width: 14px; height: 14px; flex-shrink: 0; }
+.addrow .label {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transition: max-width 0.22s ease, opacity 0.18s ease 0.05s;
+}
+.addrow:hover, .addrow:focus-visible {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  padding: 0 12px;
+  gap: 7px;
+}
+.addrow:hover .label, .addrow:focus-visible .label { max-width: 110px; opacity: 1; }
 
 .empty {
   padding: 34px 0;
