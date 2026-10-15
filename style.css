@@ -25,8 +25,8 @@
     --wa035: rgba(255, 255, 255, 0.035);
     --wa04: rgba(255, 255, 255, 0.04);
     --ink: #ececed;
-    --ink-dim: #b3b3bc;
-    --ink-mute: #85858f;
+    --ink-dim: #d6d6dc;
+    --ink-mute: #adadb8;
     --done: #7cc46b;
 
     --t-prep: #8a6a4a;
@@ -53,7 +53,6 @@
        spacing as much as the letterforms. */
     line-height: 1.75;
     letter-spacing: 0.012em;
-    -webkit-font-smoothing: antialiased;
   }
 
   .page { max-width: 880px; margin: 0 auto; padding: 44px 24px 120px; }
