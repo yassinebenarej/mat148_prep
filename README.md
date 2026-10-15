@@ -12,7 +12,12 @@ Set in OpenDyslexic, bundled in `fonts/` so the page has no network
 dependency. Licensed under the SIL Open Font License — see
 `fonts/OFL.txt`.
 
-No build step and no dependencies — `index.html` is the whole thing.
+`astuces.html` is a second page for the tricks that only turn up once
+you're working problems — write one down, edit it in place, copy them all
+out when you want them somewhere safer than a browser.
+
+No build step and no dependencies — two HTML files, one stylesheet, a
+font and an icon.
 
 ## Running it
 

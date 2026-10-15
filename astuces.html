@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MAT 148 — astuces</title>
+<meta name="description" content="Tricks worth remembering for MAT 148." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <div class="mast">
+    <span class="emoji">📐</span>
+    <h1>MAT 148 · Astuces</h1>
+    <span class="when" id="count"></span>
+  </div>
+  <p class="lede">
+    The tricks that only show up once you're doing the problems. Write one down
+    the moment it costs you time, not later.
+  </p>
+
+  <div class="toolbar">
+    <a class="navlink" href="index.html"><span class="arrow">&lsaquo;</span> Checklist</a>
+    <span class="spacer"></span>
+    <button class="reset" id="copy" type="button">Copy all</button>
+  </div>
+
+  <div class="composer">
+    <input class="field title" id="t" type="text" placeholder="The trick — e.g. multiply by the conjugate" />
+    <textarea class="field body" id="b" placeholder="When it applies, and why it works (optional)"></textarea>
+    <div class="composer-foot">
+      <span class="hintline" id="hint">⌘↵ to add</span>
+      <button class="btn" id="add" type="button" disabled>Add</button>
+    </div>
+  </div>
+
+  <div id="list"></div>
+
+  <footer>
+    <span>Newest first. Click any trick to edit it.</span>
+    <span>Stored in this browser only — use Copy all to keep a copy elsewhere.</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var KEY = 'mat148-astuces';
+
+  var list = document.getElementById('list');
+  var tEl = document.getElementById('t');
+  var bEl = document.getElementById('b');
+  var addEl = document.getElementById('add');
+  var countEl = document.getElementById('count');
+
+  var items = [];
+  try { items = JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { items = []; }
+  if (!Array.isArray(items)) items = [];
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {}
+  }
+
+  function when(ts) {
+    var d = new Date(ts);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  }
+
+  function render() {
+    countEl.textContent = items.length + (items.length === 1 ? ' trick' : ' tricks');
+
+    if (items.length === 0) {
+      list.innerHTML = '<div class="empty">Nothing yet. The first one usually turns up in a limit.</div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    items.forEach(function (it) {
+      var row = document.createElement('div');
+      row.className = 'astuce';
+
+      var main = document.createElement('div');
+      main.className = 'astuce-main';
+
+      // Editable in place: the text is the field, so there is no edit mode
+      // to enter or leave and nothing to save explicitly.
+      var title = document.createElement('input');
+      title.className = 'field title';
+      title.type = 'text';
+      title.value = it.title || '';
+      title.setAttribute('aria-label', 'Trick');
+      title.addEventListener('input', function () { it.title = title.value; save(); });
+
+      var body = document.createElement('textarea');
+      body.className = 'field body';
+      body.value = it.body || '';
+      body.setAttribute('aria-label', 'Detail');
+      body.style.minHeight = '0';
+      body.rows = 1;
+      body.setAttribute('placeholder', 'Add detail…');
+      var grow = function () {
+        body.style.height = 'auto';
+        body.style.height = body.scrollHeight + 'px';
+      };
+      body.addEventListener('input', function () { it.body = body.value; save(); grow(); });
+
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = when(it.created);
+
+      main.appendChild(title);
+      main.appendChild(body);
+      main.appendChild(meta);
+
+      var x = document.createElement('button');
+      x.className = 'x';
+      x.type = 'button';
+      x.textContent = '×';
+      x.setAttribute('aria-label', 'Delete this trick');
+      x.addEventListener('click', function () {
+        items = items.filter(function (o) { return o.id !== it.id; });
+        save();
+        render();
+      });
+
+      row.appendChild(main);
+      row.appendChild(x);
+      list.appendChild(row);
+
+      grow();
+    });
+  }
+
+  function canAdd() { return tEl.value.trim().length > 0; }
+  function sync() { addEl.disabled = !canAdd(); }
+
+  function add() {
+    if (!canAdd()) return;
+    items.unshift({
+      id: 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      title: tEl.value.trim(),
+      body: bEl.value.trim(),
+      created: Date.now()
+    });
+    save();
+    tEl.value = '';
+    bEl.value = '';
+    sync();
+    render();
+    tEl.focus();
+  }
+
+  tEl.addEventListener('input', sync);
+  addEl.addEventListener('click', add);
+
+  [tEl, bEl].forEach(function (el) {
+    el.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); add(); }
+      // Enter commits from the title field; the body is multi-line, so there
+      // it has to stay a newline.
+      if (el === tEl && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); add(); }
+    });
+  });
+
+  document.getElementById('copy').addEventListener('click', function (e) {
+    var btn = e.currentTarget;
+    if (items.length === 0) return;
+    var text = items.map(function (it) {
+      return '— ' + (it.title || '') + (it.body ? '\n  ' + it.body.replace(/\n/g, '\n  ') : '');
+    }).join('\n\n');
+    var done = function () {
+      var was = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = was; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (err) {}
+      document.body.removeChild(ta);
+    }
+  });
+
+  sync();
+  render();
+})();
+</script>
+</body>
+</html>
