@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MAT 148 — weaknesses</title>
+<meta name="description" content="What keeps going wrong in MAT 148, and what to do about it." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <div class="mast">
+    <span class="emoji">📐</span>
+    <h1>MAT 148 · Weaknesses</h1>
+    <span class="when" id="count"></span>
+  </div>
+  <p class="lede">
+    What keeps going wrong — the step you skip, the case you forget, the proof
+    that never comes out. Tick one once it stops catching you.
+  </p>
+
+  <div class="toolbar">
+    <a class="navlink" href="index.html"><span class="arrow">&lsaquo;</span> Checklist</a>
+    <a class="navlink" href="astuces.html">Astuces<span class="arrow">&rsaquo;</span></a>
+    <span class="spacer"></span>
+    <button class="reset" id="copy" type="button">Copy all</button>
+  </div>
+
+  <div class="astuces-list" id="list"></div>
+  <button class="addrow" id="add" type="button"><span class="plus">＋</span>weakness</button>
+
+  <footer>
+    <span>Enter adds the next · backspace on an empty line removes it</span>
+    <span>Stored in this browser only — use Copy all to keep a copy elsewhere.</span>
+  </footer>
+</div>
+
+<script src="notes.js"></script>
+<script>
+  noteList({
+    key: 'mat148-weaknesses',
+    mount: '#list',
+    countEl: '#count',
+    addBtn: '#add',
+    copyBtn: '#copy',
+    placeholder: 'What keeps going wrong…',
+    empty: 'Nothing yet. Add one the next time a question catches you out.',
+    tickLabel: 'Fixed',
+    noun: { one: 'weakness', many: 'weaknesses' }
+  });
+</script>
+</body>
+</html>

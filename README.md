@@ -12,14 +12,15 @@ Set in OpenDyslexic, bundled in `fonts/` so the page has no network
 dependency. Licensed under the SIL Open Font License — see
 `fonts/OFL.txt`.
 
-`astuces.html` is a second page for the tricks that only turn up once
-you're working problems. One line each, the way subtasks work in Aced:
-enter starts the next, backspace on an empty line removes it, and the
-tick marks the ones you have down. Copy all puts them on the clipboard
-when you want them somewhere safer than a browser.
+`astuces.html` collects the tricks that only turn up once you're working
+problems. `weaknesses.html` collects what keeps going wrong. Both are the
+same widget — one line each, the way subtasks work in Aced: enter starts
+the next, backspace on an empty line removes it, and the tick marks the
+ones you are done with. Copy all puts a list on the clipboard when you
+want it somewhere safer than a browser.
 
-No build step and no dependencies — two HTML files, one stylesheet, a
-font and an icon.
+No build step and no dependencies — three HTML files, one stylesheet,
+one script, a font and an icon.
 
 ## Running it
 

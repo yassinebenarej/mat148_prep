@@ -25,6 +25,7 @@
 
   <div class="toolbar">
     <a class="navlink" href="index.html"><span class="arrow">&lsaquo;</span> Checklist</a>
+    <a class="navlink" href="weaknesses.html">Weaknesses<span class="arrow">&rsaquo;</span></a>
     <span class="spacer"></span>
     <button class="reset" id="copy" type="button">Copy all</button>
   </div>
@@ -38,158 +39,19 @@
   </footer>
 </div>
 
+<script src="notes.js"></script>
 <script>
-(function () {
-  var KEY = 'mat148-astuces';
-  var list = document.getElementById('list');
-  var countEl = document.getElementById('count');
-
-  var items = [];
-  try { items = JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { items = []; }
-  if (!Array.isArray(items)) items = [];
-
-  // An earlier version stored {title, body}. Fold those into one line so
-  // nothing written before this page changed shape is lost.
-  items = items.map(function (it) {
-    if (typeof it.text === 'string') return it;
-    var t = (it.title || '').trim();
-    var b = (it.body || '').trim();
-    return { id: it.id, text: b ? t + ' — ' + b : t, done: !!it.done };
+  noteList({
+    key: 'mat148-astuces',
+    mount: '#list',
+    countEl: '#count',
+    addBtn: '#add',
+    copyBtn: '#copy',
+    placeholder: 'Astuce…',
+    empty: 'Nothing yet. The first one usually turns up in a limit.',
+    tickLabel: 'Got this one',
+    noun: { one: 'trick', many: 'tricks' }
   });
-
-  function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {}
-  }
-  function uid() {
-    return 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  }
-  function inputs() {
-    return Array.prototype.slice.call(list.querySelectorAll('.astuce-text'));
-  }
-  function focusAt(i, toEnd) {
-    var all = inputs();
-    var el = all[Math.max(0, Math.min(i, all.length - 1))];
-    if (!el) return;
-    el.focus();
-    if (toEnd) { var v = el.value || ''; el.setSelectionRange(v.length, v.length); }
-  }
-
-  function addAt(i) {
-    items.splice(i, 0, { id: uid(), text: '', done: false });
-    save();
-    render();
-    focusAt(i);
-  }
-  function remove(id) {
-    items = items.filter(function (o) { return o.id !== id; });
-    save();
-  }
-
-  function render() {
-    var written = items.filter(function (it) { return it.text.trim(); }).length;
-    countEl.textContent = written ? written + (written === 1 ? ' trick' : ' tricks') : '';
-
-    list.innerHTML = '';
-    if (items.length === 0) {
-      var e = document.createElement('div');
-      e.className = 'empty';
-      e.textContent = 'Nothing yet. The first one usually turns up in a limit.';
-      list.appendChild(e);
-      return;
-    }
-
-    items.forEach(function (it, idx) {
-      var row = document.createElement('div');
-      row.className = 'astuce-item' + (it.done ? ' done' : '');
-
-      var check = document.createElement('div');
-      check.className = 'astuce-check' + (it.done ? ' checked' : '');
-      check.setAttribute('role', 'checkbox');
-      check.setAttribute('aria-checked', String(!!it.done));
-      check.setAttribute('aria-label', 'Got this one');
-      check.tabIndex = 0;
-      check.innerHTML = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 L6.5 12 L13 4.5" /></svg>';
-      var toggle = function () {
-        it.done = !it.done;
-        save();
-        check.classList.toggle('checked', it.done);
-        check.setAttribute('aria-checked', String(it.done));
-        row.classList.toggle('done', it.done);
-      };
-      check.addEventListener('click', toggle);
-      check.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-      });
-
-      var input = document.createElement('input');
-      input.className = 'astuce-text';
-      input.type = 'text';
-      input.value = it.text;
-      input.placeholder = 'Astuce…';
-      input.addEventListener('input', function () {
-        it.text = input.value;
-        save();
-        var written = items.filter(function (o) { return o.text.trim(); }).length;
-        countEl.textContent = written ? written + (written === 1 ? ' trick' : ' tricks') : '';
-      });
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          addAt(idx + 1);
-        } else if (e.key === 'Backspace' && input.value === '') {
-          // Deleting the line you're on moves you to the end of the one
-          // above, so a run of empties clears with repeated backspaces.
-          e.preventDefault();
-          remove(it.id);
-          render();
-          focusAt(idx - 1, true);
-        }
-      });
-
-      var del = document.createElement('button');
-      del.className = 'astuce-delete';
-      del.type = 'button';
-      del.textContent = '×';
-      del.setAttribute('aria-label', 'Delete this astuce');
-      del.addEventListener('click', function () { remove(it.id); render(); });
-
-      row.appendChild(check);
-      row.appendChild(input);
-      row.appendChild(del);
-      list.appendChild(row);
-    });
-  }
-
-  document.getElementById('add').addEventListener('click', function () {
-    addAt(items.length);
-  });
-
-  document.getElementById('copy').addEventListener('click', function (e) {
-    var btn = e.currentTarget;
-    var written = items.filter(function (it) { return it.text.trim(); });
-    if (written.length === 0) return;
-    var text = written.map(function (it) {
-      return (it.done ? '[x] ' : '[ ] ') + it.text.trim();
-    }).join('\n');
-    var done = function () {
-      var was = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(function () { btn.textContent = was; }, 1400);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done, function () {});
-    } else {
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy'); done(); } catch (err) {}
-      document.body.removeChild(ta);
-    }
-  });
-
-  render();
-})();
 </script>
 </body>
 </html>
