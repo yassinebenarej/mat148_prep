@@ -390,3 +390,12 @@
   .sum-search { width: 100%; }
   .sum-head, .sum-body { padding-left: 8px; }
 }
+.sum-tools { display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-bottom: 6px; }
+.sum-edited { font-family: var(--mono); font-size: 11px; color: var(--t-thm); letter-spacing: 0; }
+.sum-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--t-thm); flex: none; align-self: center; }
+.sum-card.editing .sum-content {
+  outline: 1px dashed var(--line-strong); outline-offset: 6px; border-radius: 4px;
+  background: var(--wa035); cursor: text;
+}
+.sum-card.editing .sum-content:focus { outline-color: var(--ink-mute); }
+.sum-card.editing .sum-edit { color: var(--done); font-weight: 700; }
