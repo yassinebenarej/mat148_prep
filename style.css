@@ -352,3 +352,41 @@
 .exam-list a:hover { background: var(--wa035); }
 .exam-list .t { font-size: 15px; }
 .exam-list .s { font-size: 12.5px; color: var(--ink-mute); }
+
+/* ---- video summaries ---- */
+.sum-search {
+  background: var(--wa04); border: 1px solid var(--line-strong); border-radius: 6px;
+  color: var(--ink); font-family: inherit; font-size: 12px; padding: 4px 10px; width: 160px;
+}
+.sum-search:focus { outline: none; border-color: var(--ink-mute); }
+.sum-card { border-bottom: 1px solid var(--line); }
+.sum-head {
+  display: flex; align-items: baseline; gap: 12px; width: 100%;
+  padding: 11px 0 11px 26px; background: transparent; border: 0;
+  color: var(--ink); font-family: inherit; font-size: 14px; letter-spacing: inherit;
+  text-align: left; cursor: pointer;
+}
+.sum-head:hover { background: var(--wa035); }
+.sum-head .chev { width: 10px; height: 10px; color: var(--ink-mute); flex: none; transition: transform 0.18s ease; align-self: center; }
+.sum-card.open .sum-head .chev { transform: rotate(90deg); }
+.sum-num { font-family: var(--mono); font-size: 12px; color: var(--ink-mute); flex: none; min-width: 34px; letter-spacing: 0; }
+.sum-body { display: none; padding: 4px 0 18px 26px; }
+.sum-card.open .sum-body { display: block; }
+.sum-sec { margin: 0 0 14px; padding-left: 12px; border-left: 3px solid var(--accent, var(--line-strong)); }
+.sum-sec h3 { margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent, var(--ink-mute)); }
+.sum-sec p { margin: 0 0 6px; }
+.sum-sec ul, .sum-sec ol { margin: 0; padding-left: 20px; }
+.sum-sec li { margin: 2px 0; }
+.sum-sec code { font-family: var(--mono); font-size: 12.5px; background: var(--wa08); padding: 0 4px; border-radius: 3px; }
+.sec-idea  { --accent: var(--t-u2); }
+.sec-def   { --accent: var(--t-def); }
+.sec-not   { --accent: var(--t-u1); }
+.sec-thm   { --accent: var(--t-thm); }
+.sec-meth  { --accent: var(--t-prep); }
+.sec-warn  { --accent: var(--t-prf); }
+.sec-check { --accent: var(--done); }
+.sum-empty { color: var(--ink-mute); font-size: 13px; }
+@media (max-width: 600px) {
+  .sum-search { width: 100%; }
+  .sum-head, .sum-body { padding-left: 8px; }
+}
