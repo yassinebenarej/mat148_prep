@@ -345,11 +345,13 @@
 
 .exam-list { display: flex; flex-direction: column; margin-top: 8px; }
 .exam-list a {
-  display: flex; flex-direction: column; gap: 2px;
+  display: flex; flex-direction: row; align-items: center; gap: 10px;
   padding: 12px 8px; text-decoration: none; color: var(--ink);
   border-radius: 8px;
 }
 .exam-list a:hover { background: var(--wa035); }
+.exam-list .file-icon { width: 26px; height: 26px; flex: 0 0 26px; object-fit: contain; display: block; }
+.exam-list .txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .exam-list .t { font-size: 15px; }
 .exam-head { font-size: 13px; font-weight: normal; color: var(--ink-mute); text-transform: uppercase; letter-spacing: .06em; margin: 22px 8px 0; }
 .exam-list .s { font-size: 12.5px; color: var(--ink-mute); }
@@ -373,19 +375,27 @@
 .sum-num { font-family: var(--mono); font-size: 12px; color: var(--ink-mute); flex: none; min-width: 34px; letter-spacing: 0; }
 .sum-body { display: none; padding: 4px 0 18px 26px; }
 .sum-card.open .sum-body { display: block; }
-.sum-sec { margin: 0 0 14px; padding-left: 12px; border-left: 3px solid var(--accent, var(--line-strong)); }
-.sum-sec h3 { margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent, var(--ink-mute)); }
+.sum-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sum-title { font-size: 15px; }
+.sum-idea { font-size: 12.5px; color: var(--ink-mute); line-height: 1.4; }
+.sum-head { align-items: center; }
+.sum-sec { margin: 0 0 12px; }
+.sum-sec h3 { margin: 0 0 5px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent, var(--ink-mute)); }
 .sum-sec p { margin: 0 0 6px; }
-.sum-sec ul, .sum-sec ol { margin: 0; padding-left: 20px; }
-.sum-sec li { margin: 2px 0; }
-.sum-sec code { font-family: var(--mono); font-size: 12.5px; background: var(--wa08); padding: 0 4px; border-radius: 3px; }
-.sec-idea  { --accent: var(--t-u2); }
-.sec-def   { --accent: var(--t-def); }
-.sec-not   { --accent: var(--t-u1); }
-.sec-thm   { --accent: var(--t-thm); }
-.sec-meth  { --accent: var(--t-prep); }
-.sec-warn  { --accent: var(--t-prf); }
-.sec-check { --accent: var(--done); }
+.sum-sec ul, .sum-sec ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.sum-sec li { margin: 0; padding: 6px 10px; border-radius: 6px; background: var(--wa035); line-height: 1.45; }
+.sum-sec li strong { color: var(--accent, var(--ink)); }
+.sum-sec code { font-family: var(--mono); font-size: 13px; letter-spacing: 0; }
+.sec-formula { --accent: var(--t-def); }
+.sec-formula li { background: transparent; border: 1px solid var(--accent); padding: 8px 12px; }
+.sec-formula code { font-size: 14px; white-space: normal; background: none; padding: 0; }
+.sec-know { --accent: var(--t-u2); }
+.sec-do { --accent: var(--t-prep); }
+.sec-do ol { counter-reset: step; }
+.sec-do li { counter-increment: step; display: flex; gap: 10px; align-items: baseline; }
+.sec-do li::before { content: counter(step); flex: none; width: 18px; height: 18px; line-height: 18px; text-align: center; font-size: 11px; font-family: var(--mono); border-radius: 50%; background: var(--accent); color: var(--bg, #111); }
+.sec-trap { --accent: var(--t-prf); }
+.sec-trap li { background: transparent; border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; }
 .sum-empty { color: var(--ink-mute); font-size: 13px; }
 @media (max-width: 600px) {
   .sum-search { width: 100%; }
