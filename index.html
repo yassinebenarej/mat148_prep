@@ -3,22 +3,27 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MAT 148 Test 1 — prep</title>
-<meta name="description" content="Checklist for MAT 148 Test 1: the nine prep steps, plus every topic, definition, theorem and proof the test covers." />
+<title>MAT 148 — test prep</title>
+<meta name="description" content="Checklists for MAT 148 Tests 1 and 2: the prep steps, plus every topic, definition, theorem and proof each test covers." />
 <meta name="robots" content="noindex" />
 <!-- A radical, drawn rather than typed: no glyph to go missing, and it
      stays legible down to the 16px the tab strip actually renders. -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-<link rel="stylesheet" href="style.css?v=14" />
+<link rel="stylesheet" href="style.css?v=15" />
 </head>
 <body>
 
 <div class="page">
 
+  <div class="tests" role="tablist" aria-label="Test">
+    <button class="test-tab" role="tab" data-test="t1" type="button">Test 1</button>
+    <button class="test-tab" role="tab" data-test="t2" type="button">Test 2</button>
+  </div>
+
   <div class="mast">
     <span class="emoji">📐</span>
-    <h1>MAT 148 · Test 1</h1>
-    <span class="when">Thu 22 Oct · 5:10–7:00pm · 110 min · no aids</span>
+    <h1 id="mast-title">MAT 148</h1>
+    <span class="when" id="mast-when"></span>
   </div>
 
   <div class="toolbar">
@@ -40,9 +45,7 @@
 
 <script>
 (function () {
-  var KEY = 'mat148-test1-checklist';
-
-  var GROUPS = [
+  var T1 = [
     { id: 'prep', name: 'Prep', color: 'var(--t-prep)', numbered: true, items: [
       { id: 'p1', t: 'Rewatch every Unit 1 and Unit 2 video', s: 'Make sure you follow them, not just that you have seen them.' },
       { id: 'p2', t: 'Review the pre-class quizzes for Units 1 and 2', s: 'Redo every question you got wrong.' },
@@ -102,45 +105,101 @@
     ]}
   ];
 
-  var TICK = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 L6.5 12 L13 4.5" /></svg>';
+  var T2 = [
+    { id: 'prep', name: 'Prep', color: 'var(--t-prep)', numbered: true, items: [
+      { id: 'p1', t: 'Rewatch every Unit 3, Unit 4 and Unit 5 video', s: 'Unit 5 up to 5.9 only. Make sure you follow them, not just that you have seen them.' },
+      { id: 'p2', t: 'Review pre-class Quizzes 16–27', s: 'Redo every question you got wrong.' },
+      { id: 'p3', t: 'Go through all your lecture notes' },
+      { id: 'p4', t: 'Work every question in Tutorials 5, 6 and 7' },
+      { id: 'p5', t: 'Redo what you got wrong in Tutorial Quiz 3' },
+      { id: 'p6', t: 'Computation Quiz 2 — finish it before the test', s: 'This is the practice for the computation part.' },
+      { id: 'p7', t: 'Work the Unit 3, 4 and 5 practice problems' },
+      { id: 'p8', t: 'Problem set B', s: '<code>148F26_PSB.pdf</code> — nothing to hand in. Not comprehensive: only problems not in past assessments. Solutions posted at least a week before 26 Nov.' },
+      { id: 'p9', t: 'Take what is left to office hours or Piazza' }
+    ]},
+    { id: 'u3', name: 'Unit 3 — Derivatives', color: 'var(--t-u3)', items: [
+      { id: 'u3a', t: 'Definition of the derivative as a limit' },
+      { id: 'u3b', t: 'Prove the derivative rules', s: 'e.g. the product rule and the quotient rule.' },
+      { id: 'u3c', t: 'Compute derivatives with the rules' },
+      { id: 'u3d', t: 'Implicit differentiation' },
+      { id: 'u3e', t: 'Logarithmic differentiation' },
+      { id: 'u3f', t: 'Compute a derivative from the definition' },
+      { id: 'u3g', t: 'Higher-order derivatives' },
+      { id: 'u3h', t: 'Geometric meaning of the derivative', s: 'Tangent lines, and applications such as linear approximation.' },
+      { id: 'u3i', t: 'Linear approximation' },
+      { id: 'u3j', t: 'Prove a simple derivative directly from the limit definition' },
+      { id: 'u3k', t: 'Differentiability vs continuity', s: 'Differentiable ⇒ continuous, and why the converse fails (e.g. |x| at 0).' }
+    ]},
+    { id: 'u4', name: 'Unit 4 — Transcendental functions', color: 'var(--t-u4)', items: [
+      { id: 'u4a', t: 'Definition of the inverse function' },
+      { id: 'u4b', t: 'Characterize which functions are invertible', s: 'One-to-one; for continuous functions on an interval, strictly monotonic.' },
+      { id: 'u4c', t: 'Derivative of the inverse function' },
+      { id: 'u4d', t: 'Derivatives of exponential and logarithmic functions' },
+      { id: 'u4e', t: 'Derivatives of trig functions' },
+      { id: 'u4f', t: 'Define the inverse trig functions', s: 'Including the restricted domain each one is built on.' },
+      { id: 'u4g', t: 'Sketch the graphs of the inverse trig functions' },
+      { id: 'u4h', t: 'Derive the inverse trig derivative formulas' },
+      { id: 'u4i', t: 'Simplify trig ∘ inverse trig', s: 'e.g. tan(arcsec x) — draw the triangle, watch the sign.' }
+    ]},
+    { id: 'u5', name: 'Unit 5 — Mean Value Theorems (to 5.9)', color: 'var(--t-u5)', items: [
+      { id: 'u5a', t: "State Rolle's Theorem", s: 'Hypothesis and conclusion, both.' },
+      { id: 'u5b', t: 'State the Mean Value Theorem', s: 'Hypothesis and conclusion, both.' },
+      { id: 'u5c', t: 'Find the critical points' },
+      { id: 'u5d', t: 'Definitions of local and global extrema' },
+      { id: 'u5e', t: 'Find the local extrema' },
+      { id: 'u5f', t: 'Find the global extrema' },
+      { id: 'u5g', t: "Use Rolle's Theorem and the MVT to write proofs" },
+      { id: 'u5h', t: 'Read extrema and critical points off the graph of f′' }
+    ]},
+    { id: 'def', name: 'Definitions to write cold', color: 'var(--t-def)', items: [
+      { id: 'd1', t: 'Local extremum (max and min)' },
+      { id: 'd2', t: 'Global extremum (max and min)' },
+      { id: 'd3', t: 'Derivative as a limit' },
+      { id: 'd4', t: 'One-to-one function' },
+      { id: 'd5', t: 'Increasing and decreasing function' },
+      { id: 'd6', t: 'Inverse function' },
+      { id: 'd7', t: 'Critical point' }
+    ]},
+    { id: 'thm', name: 'Theorems to know', color: 'var(--t-thm)', items: [
+      { id: 't1', t: 'Differentiability implies continuity' },
+      { id: 't2', t: "Rolle's Theorem" },
+      { id: 't3', t: 'The Mean Value Theorem' },
+      { id: 't4', t: 'f′ = 0 implies f is constant', s: 'The theorem in 5.9.' }
+    ]},
+    { id: 'prf', name: 'Proofs to write cold', color: 'var(--t-prf)', items: [
+      { id: 'r1', t: 'Differentiability implies continuity' },
+      { id: 'r2', t: 'The product rule' },
+      { id: 'r3', t: 'The quotient rule' },
+      { id: 'r4', t: 'A simple derivative from the limit definition' },
+      { id: 'r5', t: 'The derivative of an inverse trig function' },
+      { id: 'r6', t: "A proof using Rolle's Theorem", s: 'e.g. an equation has at most one root.' },
+      { id: 'r7', t: 'A proof using the MVT', s: 'e.g. an inequality, or an equality.' },
+      { id: 'r8', t: 'f′ = 0 on an interval ⇒ f is constant' }
+    ]},
+    { id: 'qt', name: 'The four question types', color: 'var(--t-u1)', items: [
+      { id: 'q1', t: 'Computations', s: 'Derivatives from the definition, with the rules, implicitly, logarithmically; the derivative of an inverse; higher-order derivatives.' },
+      { id: 'q2', t: 'Applications', s: 'Linear approximation; using the MVT to prove an inequality or equality.' },
+      { id: 'q3', t: 'Conceptual', s: 'Extrema and critical points from the graph of f′; state definitions and theorems; how the inverse function is defined.' },
+      { id: 'q4', t: 'Proofs', s: 'Differentiability ⇒ continuity; differentiation rules; Rolle and MVT proofs.' }
+    ]}
+  ];
 
-  var saved = {};
-  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
-  var openState = {};
-  try { openState = JSON.parse(localStorage.getItem(KEY + '-open') || '{}') || {}; } catch (e) { openState = {}; }
+  var TESTS = {
+    t1: { key: 'mat148-test1-checklist', title: 'MAT 148 · Test 1', when: 'Thu 22 Oct · 5:10–7:00pm · 110 min · no aids', groups: T1 },
+    t2: { key: 'mat148-test2-checklist', title: 'MAT 148 · Test 2', when: 'Thu 26 Nov · Units 3–5 (to 5.9)', groups: T2 }
+  };
+  var TAB_KEY = 'mat148-active-test';
+
+  var TICK = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 L6.5 12 L13 4.5" /></svg>';
 
   var filter = 'todo';
   var root = document.getElementById('groups');
+  var current, test, GROUPS, KEY, saved, openState, boxes;
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
-
-  root.innerHTML = GROUPS.map(function (g) {
-    var rows = g.items.map(function (it, i) {
-      return '<label class="row-item" data-item="' + it.id + '">' +
-        '<span class="check-zone">' +
-          '<input type="checkbox" data-id="' + it.id + '" />' +
-          '<span class="check">' + TICK + '</span>' +
-        '</span>' +
-        '<span class="title-wrap">' +
-          '<span class="title">' + (g.numbered ? '<span class="idx">' + (i + 1) + '</span>' : '') + esc(it.t) + '</span>' +
-          (it.s ? '<span class="subtitle">' + it.s + '</span>' : '') +
-        '</span>' +
-      '</label>';
-    }).join('');
-
-    return '<div class="group' + (openState[g.id] === false ? '' : ' open') + '" data-group="' + g.id + '" style="--sq:' + g.color + '">' +
-      '<button class="group-head" type="button" aria-expanded="true">' +
-        '<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4.5 2.5 8.5 6 4.5 9.5" /></svg>' +
-        '<span class="type-square"></span>' +
-        '<span class="name">' + esc(g.name) + '</span>' +
-        '<span class="count"></span>' +
-        '<span class="progress-mini"><span class="progress-mini-fill"></span></span>' +
-      '</button>' +
-      '<div class="group-body">' + rows + '</div>' +
-    '</div>';
-  }).join('');
-
-  var boxes = Array.prototype.slice.call(root.querySelectorAll('input[type=checkbox]'));
+  function load(k, fallback) {
+    try { return JSON.parse(localStorage.getItem(k) || fallback) || JSON.parse(fallback); } catch (e) { return JSON.parse(fallback); }
+  }
 
   function save() {
     var out = {};
@@ -149,6 +208,73 @@
   }
   function saveOpen() {
     try { localStorage.setItem(KEY + '-open', JSON.stringify(openState)); } catch (e) {}
+  }
+
+  /* Each test keeps its own ticks and open groups under its own key, so
+   * switching tabs rebuilds the list from that test's data. Item ids only
+   * need to be unique within a test. */
+  function build(id) {
+    current = id;
+    test = TESTS[id];
+    GROUPS = test.groups;
+    KEY = test.key;
+    saved = load(KEY, '{}');
+    openState = load(KEY + '-open', '{}');
+
+    document.getElementById('mast-title').textContent = test.title;
+    document.getElementById('mast-when').textContent = test.when;
+    document.title = test.title.replace(' · ', ' ') + ' — prep';
+    document.querySelectorAll('.test-tab').forEach(function (t) {
+      var on = t.dataset.test === id;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', String(on));
+    });
+    try { localStorage.setItem(TAB_KEY, id); } catch (e) {}
+    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+
+    root.innerHTML = GROUPS.map(function (g) {
+      var rows = g.items.map(function (it, i) {
+        return '<label class="row-item" data-item="' + it.id + '">' +
+          '<span class="check-zone">' +
+            '<input type="checkbox" data-id="' + it.id + '" />' +
+            '<span class="check">' + TICK + '</span>' +
+          '</span>' +
+          '<span class="title-wrap">' +
+            '<span class="title">' + (g.numbered ? '<span class="idx">' + (i + 1) + '</span>' : '') + esc(it.t) + '</span>' +
+            (it.s ? '<span class="subtitle">' + it.s + '</span>' : '') +
+          '</span>' +
+        '</label>';
+      }).join('');
+
+      return '<div class="group' + (openState[g.id] === false ? '' : ' open') + '" data-group="' + g.id + '" style="--sq:' + g.color + '">' +
+        '<button class="group-head" type="button" aria-expanded="' + (openState[g.id] === false ? 'false' : 'true') + '">' +
+          '<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4.5 2.5 8.5 6 4.5 9.5" /></svg>' +
+          '<span class="type-square"></span>' +
+          '<span class="name">' + esc(g.name) + '</span>' +
+          '<span class="count"></span>' +
+          '<span class="progress-mini"><span class="progress-mini-fill"></span></span>' +
+        '</button>' +
+        '<div class="group-body">' + rows + '</div>' +
+      '</div>';
+    }).join('');
+
+    boxes = Array.prototype.slice.call(root.querySelectorAll('input[type=checkbox]'));
+    boxes.forEach(function (b) {
+      if (saved[b.dataset.id]) b.checked = true;
+      b.addEventListener('change', function () { save(); render(); });
+    });
+
+    root.querySelectorAll('.group-head').forEach(function (h) {
+      h.addEventListener('click', function () {
+        var g = h.closest('.group');
+        var open = g.classList.toggle('open');
+        h.setAttribute('aria-expanded', String(open));
+        openState[g.dataset.group] = open;
+        saveOpen();
+      });
+    });
+
+    render();
   }
 
   function render() {
@@ -180,22 +306,6 @@
     });
   }
 
-  boxes.forEach(function (b) {
-    if (saved[b.dataset.id]) b.checked = true;
-    b.addEventListener('change', function () { save(); render(); });
-  });
-
-  root.querySelectorAll('.group-head').forEach(function (h) {
-    h.addEventListener('click', function () {
-      var g = h.closest('.group');
-      var id = g.dataset.group;
-      var open = g.classList.toggle('open');
-      h.setAttribute('aria-expanded', String(open));
-      openState[id] = open;
-      saveOpen();
-    });
-  });
-
   document.querySelectorAll('.chip').forEach(function (c) {
     c.addEventListener('click', function () {
       document.querySelectorAll('.chip').forEach(function (x) { x.classList.remove('active'); });
@@ -205,7 +315,19 @@
     });
   });
 
-  render();
+  document.querySelectorAll('.test-tab').forEach(function (t) {
+    t.addEventListener('click', function () { if (t.dataset.test !== current) build(t.dataset.test); });
+  });
+  window.addEventListener('hashchange', function () {
+    var h = location.hash.slice(1);
+    if (TESTS[h] && h !== current) build(h);
+  });
+
+  // A #t1 / #t2 link wins; otherwise the last tab used; otherwise Test 2,
+  // the one coming up.
+  var start = location.hash.slice(1);
+  if (!TESTS[start]) { try { start = localStorage.getItem(TAB_KEY); } catch (e) { start = null; } }
+  build(TESTS[start] ? start : 't2');
 })();
 </script>
 </body>

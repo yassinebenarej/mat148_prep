@@ -1,12 +1,16 @@
-# MAT148 Test 1 — prep checklist
+# MAT148 — test prep checklists
 
-A single static page for tracking revision before MAT148H1 Test 1
-(Calculus I with Proofs, Fall 2026).
+A single static page for tracking revision before the MAT148H1 term
+tests (Calculus I with Proofs, Fall 2026), with a tab per test. Link
+straight to one with `index.html#t1` or `index.html#t2`; otherwise the
+page reopens on the last tab used.
 
 The Test 1 announcement turned into one set of checkboxes: the nine prep
 steps, the Unit 1 and Unit 2 coverage, and the definitions, theorems and
-proofs that have to be written from memory. Ticks and which groups are
-open are kept in localStorage, so closing the tab doesn't lose them.
+proofs that have to be written from memory. Test 2 (Units 3–5, up to
+5.9) has the same shape. Ticks and which groups are open are kept in
+localStorage, separately for each test, so closing the tab doesn't lose
+them.
 
 Set in OpenDyslexic, bundled in `fonts/` so the page has no network
 dependency. Licensed under the SIL Open Font License — see
@@ -30,6 +34,6 @@ Open `index.html`, or serve the folder:
 
 ## Notes
 
-Content is transcribed from the course's Test 1 announcement. Check
+Content is transcribed from the course's Test 1 and Test 2 announcements. Check
 Quercus before relying on anything here — the test details are the
 instructor's to change.

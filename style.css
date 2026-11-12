@@ -35,6 +35,9 @@
     --t-def:  #87a07a;
     --t-thm:  #c89a3a;
     --t-prf:  #c2766c;
+    --t-u3:   #7fa8a0;
+    --t-u4:   #a88aa0;
+    --t-u5:   #b0a070;
 
     --font: "OpenDyslexic", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     --mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
@@ -67,6 +70,31 @@
     color: var(--ink-mute);
     letter-spacing: 0;
   }
+
+  /* ---- test tabs: one checklist page, a tab per test ---- */
+  .tests {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    margin-bottom: 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: 9px;
+  }
+  .test-tab {
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    padding: 3px 14px;
+    color: var(--ink-mute);
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: background 0.14s ease, color 0.14s ease;
+  }
+  .test-tab:hover { color: var(--ink); }
+  .test-tab.active { background: var(--wa08); color: var(--ink); font-weight: 700; }
+  .test-tab:focus-visible { outline: 2px solid var(--ink-dim); outline-offset: 1px; }
 
   /* ---- toolbar: the coursework page's status chips ---- */
   .toolbar {
